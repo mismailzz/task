@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mismailzz/task/internal"
 	"github.com/spf13/cobra"
 )
 
@@ -15,8 +16,15 @@ var AddCmd = &cobra.Command{
 			fmt.Println("Please provide a task description.")
 			return
 		}
-		taskDescription := strings.Join(args, " ")
-		fmt.Printf("Task added: %s\n", taskDescription)
+		db, _ := internal.OpenDB("tasks.db")
+		taskText := strings.Join(args, " ")
+		err := internal.AddTask(db, taskText)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		fmt.Println("Added:", taskText)
+
 	},
 }
 
